@@ -7,6 +7,7 @@ const uuid = require('node-uuid');
 const request = require('request');
 const JSONbig = require('json-bigint');
 const async = require('async');
+const dweetClient = require("node-dweetio");
 
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
@@ -413,9 +414,13 @@ class FacebookBot {
 let facebookBot = new FacebookBot();
 
 const app = express();
+const dweet= new dweetClient();
 
 app.use(bodyParser.text({type: 'application/json'}));
 
+dweet.listen_for("tasker", function(dweet){
+ facebookBot.doTextResponse(dweet.content.response.speech);
+});
 app.get('/webhook/', (req, res) => {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
         res.send(req.query['hub.challenge']);
@@ -427,6 +432,7 @@ app.get('/webhook/', (req, res) => {
         res.send('Error, wrong validation token');
     }
 });
+
 
 app.post('/webhook/', (req, res) => {
     try {
