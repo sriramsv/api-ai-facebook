@@ -258,7 +258,7 @@ class FacebookBot {
 
             let apiaiRequest = this.apiAiService.textRequest(text,
                 {
-                    sessionId: this.sessionIds.get(sender),
+                    sessionId:APIAI_ACCESS_TOKEN ,
                     originalRequest: {
                         data: event,
                         source: "facebook"
