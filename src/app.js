@@ -245,7 +245,7 @@ class FacebookBot {
 
     }
     joinsend(text){
-      const url="https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=av=:="+text+"&deviceId="+JOIN_DEVICE_ID;
+      const url="https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=av=:="+text+"=:=fb"+"&deviceId="+JOIN_DEVICE_ID;
       request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           console.log(body) // Show the HTML for the Google homepage.
@@ -338,6 +338,7 @@ class FacebookBot {
     }
 
     sendFBMessage(sender, messageData) {
+        // console.log("FB",sender,messageData);
         return new Promise((resolve, reject) => {
             request({
                 url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -429,8 +430,11 @@ app.use(bodyParser.text({type: 'application/json'}));
 // dweetio.use(bodyParser.text({type: 'application/json'}));
 
 dweetio.listen_for("tasker", function(dweet){
-    // console.log(dweet);
-    // console.log(dweet.content.response);
+    console.log(dweet);
+    var message={"text":dweet.content.response};
+    var sender="1691137497653372";
+    console.log(sender,message);
+    facebookBot.sendFBMessage(sender,message);
 });
 app.get('/webhook/', (req, res) => {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
