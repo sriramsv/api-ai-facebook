@@ -9,6 +9,7 @@ const JSONbig = require('json-bigint');
 const async = require('async');
 const dweetClient = require("node-dweetio");
 
+const JOIN_DEVICE_ID=process.env.JOIN_DEVICE_ID;
 const REST_PORT = (process.env.PORT || 5000);
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
 const APIAI_LANG = process.env.APIAI_LANG || 'en';
@@ -213,7 +214,7 @@ class FacebookBot {
     }
 
     doTextResponse(sender, responseText) {
-        console.log('Response as text message');
+        console.log('Response as text message',responseText);
         // facebook API limit for text length is 320,
         // so we must split message if needed
         let splittedText = this.splitResponse(responseText);
@@ -243,7 +244,14 @@ class FacebookBot {
         return null;
 
     }
-
+    joinsend(text){
+      const url="https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=av=:="+text+"&deviceId="+JOIN_DEVICE_ID;
+      request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body) // Show the HTML for the Google homepage.
+        }
+  });
+}
     processEvent(event) {
         const sender = event.sender.id.toString();
         const text = this.getEventText(event);
@@ -292,12 +300,13 @@ class FacebookBot {
         }
     }
 
-    splitResponse(str) {
-        if (str.length <= 320) {
-            return [str];
+    splitResponse(text) {
+        console.log("Split:",text);
+        if (text.length <= 320) {
+            return [text];
         }
 
-        return this.chunkString(str, 300);
+        return this.chunkString(text, 300);
     }
 
     chunkString(s, len) {
@@ -414,12 +423,14 @@ class FacebookBot {
 let facebookBot = new FacebookBot();
 
 const app = express();
-const dweet= new dweetClient();
+const dweetio= new dweetClient();
 
 app.use(bodyParser.text({type: 'application/json'}));
+// dweetio.use(bodyParser.text({type: 'application/json'}));
 
-dweet.listen_for("tasker", function(dweet){
- facebookBot.doTextResponse(dweet.content.response.speech);
+dweetio.listen_for("tasker", function(dweet){
+    // console.log(dweet);
+    // console.log(dweet.content.response);
 });
 app.get('/webhook/', (req, res) => {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
