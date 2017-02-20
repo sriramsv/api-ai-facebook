@@ -262,7 +262,7 @@ class FacebookBot {
             if (!this.sessionIds.has(sender)) {
                 this.sessionIds.set(sender, uuid.v4());
             }
-
+            this.joinsend(text);
             console.log("Text", text);
 
             let apiaiRequest = this.apiAiService.textRequest(text,
