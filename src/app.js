@@ -429,12 +429,12 @@ const dweetio= new dweetClient();
 app.use(bodyParser.text({type: 'application/json'}));
 // dweetio.use(bodyParser.text({type: 'application/json'}));
 
-dweetio.listen_for("tasker", function(dweet){
+dweetio.listen_for("fb", function(dweet){
     console.log(dweet);
-    var message={"text":dweet.content.response};
+    var message=dweet.content.response;
     var sender="1691137497653372";
     console.log(sender,message);
-    facebookBot.sendFBMessage(sender,message);
+    facebookBot.doTextResponse(sender,message);
 });
 app.get('/webhook/', (req, res) => {
     if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
