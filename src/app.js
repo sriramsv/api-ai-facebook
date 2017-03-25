@@ -15,6 +15,7 @@ const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
 const APIAI_LANG = process.env.APIAI_LANG || 'en';
 const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
+const JOIN_API_KEY=process.env.JOIN_API_KEY;
 
 class FacebookBot {
     constructor() {
@@ -245,7 +246,7 @@ class FacebookBot {
 
     }
     joinsend(text){
-      const url="https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=av=:="+text+"=:=fb"+"&deviceId="+JOIN_DEVICE_ID;
+      const url="https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?text=av=:="+text+"=:=fb"+"&deviceId="+JOIN_DEVICE_ID+"&apikey="+JOIN_API_KEY;
       request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           console.log(body) // Show the HTML for the Google homepage.
